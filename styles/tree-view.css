@@ -1,0 +1,51 @@
+/* OpenFOAM Tree View Custom Styling */
+
+/* Custom colors for different node types */
+.monaco-list .monaco-list-row[data-openfoam-type="block"] .label-name {
+    color: #007ACC !important; /* Blue for blocks */
+    font-weight: bold;
+}
+
+.monaco-list .monaco-list-row[data-openfoam-type="keyvalue"] .label-name {
+    color: #16825D !important; /* Green for key-value pairs */
+    font-style: italic;
+}
+
+.monaco-list .monaco-list-row[data-openfoam-type="key"] .label-name {
+    color: #CA5010 !important; /* Orange for keys */
+}
+
+.monaco-list .monaco-list-row[data-openfoam-type="value"] .label-name {
+    color: #8764B8 !important; /* Purple for values */
+}
+
+.monaco-list .monaco-list-row[data-openfoam-type="value-number"] .label-name {
+    color: #8764B8 !important; /* Purple for numbers */
+    font-family: 'Consolas', 'Courier New', monospace;
+}
+
+.monaco-list .monaco-list-row[data-openfoam-type="value-boolean"] .label-name {
+    color: #D13438 !important; /* Red for booleans */
+    font-weight: bold;
+}
+
+.monaco-list .monaco-list-row[data-openfoam-type="value-string"] .label-name {
+    color: #B5BD68 !important; /* Yellow-green for strings */
+}
+
+/* Enhanced hover effects */
+.monaco-list .monaco-list-row:hover[data-openfoam-type="block"] {
+    background-color: rgba(0, 122, 204, 0.1) !important;
+}
+
+.monaco-list .monaco-list-row:hover[data-openfoam-type="keyvalue"] {
+    background-color: rgba(22, 130, 93, 0.1) !important;
+}
+
+.monaco-list .monaco-list-row:hover[data-openfoam-type="key"] {
+    background-color: rgba(202, 80, 16, 0.1) !important;
+}
+
+.monaco-list .monaco-list-row:hover[data-openfoam-type^="value"] {
+    background-color: rgba(135, 100, 184, 0.1) !important;
+}

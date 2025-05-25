@@ -9,9 +9,7 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [
-    "onLanguage:plaintext"
-  ],
+  "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
     "languages": [
@@ -43,7 +41,131 @@
         "scopeName": "source.openfoam",
         "path": "./syntaxes/openfoam.tmLanguage.json"
       }
-    ]
+    ],
+    "colors": [
+      {
+        "id": "openfoam.block",
+        "description": "Color for OpenFOAM block nodes",
+        "defaults": {
+          "dark": "#569CD6",
+          "light": "#0000FF",
+          "highContrast": "#569CD6"
+        }
+      },
+      {
+        "id": "openfoam.keyValue",
+        "description": "Color for OpenFOAM key-value nodes", 
+        "defaults": {
+          "dark": "#4EC9B0",
+          "light": "#008000",
+          "highContrast": "#4EC9B0"
+        }
+      },
+      {
+        "id": "openfoam.key",
+        "description": "Color for OpenFOAM key nodes",
+        "defaults": {
+          "dark": "#DCDCAA",
+          "light": "#795E26",
+          "highContrast": "#DCDCAA"
+        }
+      },
+      {
+        "id": "openfoam.value",
+        "description": "Color for OpenFOAM value nodes",
+        "defaults": {
+          "dark": "#CE9178",
+          "light": "#A31515",
+          "highContrast": "#CE9178"
+        }
+      },
+      {
+        "id": "openfoam.keyColor",
+        "description": "Color for OpenFOAM keys",
+        "defaults": {
+          "dark": "#4FC3F7",
+          "light": "#0277BD"
+        }
+      },
+      {
+        "id": "openfoam.valueColor", 
+        "description": "Color for OpenFOAM values",
+        "defaults": {
+          "dark": "#81C784",
+          "light": "#388E3C"
+        }
+      },
+      {
+        "id": "openfoamOutline.keyForeground",
+        "description": "Foreground color for OpenFOAM keys in outline",
+        "defaults": {
+          "dark": "#569CD6",
+          "light": "#0000FF"
+        }
+      },
+      {
+        "id": "openfoamOutline.valueForeground", 
+        "description": "Foreground color for OpenFOAM values in outline",
+        "defaults": {
+          "dark": "#4EC9B0",
+          "light": "#008000"
+        }
+      }
+    ],
+    "views": {
+      "explorer": [
+        {
+          "id": "openfoamOutline",
+          "name": "OpenFOAM Outline",
+          "icon": "$(symbol-structure)",
+          "when": "resourceExtname == .dict || resourceFilename == controlDict || resourceFilename == fvSchemes || resourceFilename == fvSolution || resourceFilename == caseSetupDict || resourceFilename == decomposeParDict || resourceFilename == fvOptions || resourceFilename == helyxHexMeshDict || resourceFilename == probesLocation || resourceFilename == surfaceFeatureExtractDict || resourceFilename == surfaceIntersectionDict || resourceFilename == topoSetDict"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "foamstudio.helloWorld",
+        "title": "Hello World"
+      },
+      {
+        "command": "foamstudio.revealLine",
+        "title": "Reveal Line"
+      },
+      {
+        "command": "foamstudio.refreshOutline",
+        "title": "Refresh",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "foamstudio.collapseAll",
+        "title": "Collapse All",
+        "icon": "$(collapse-all)"
+      },
+      {
+        "command": "foamstudio.testOutline",
+        "title": "Test OpenFOAM Outline",
+        "icon": "$(debug-start)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "foamstudio.refreshOutline",
+          "when": "view == openfoamOutline",
+          "group": "navigation"
+        },
+        {
+          "command": "foamstudio.collapseAll",
+          "when": "view == openfoamOutline",
+          "group": "navigation"
+        },
+        {
+          "command": "foamstudio.testOutline",
+          "when": "view == openfoamOutline",
+          "group": "navigation"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

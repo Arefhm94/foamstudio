@@ -1,0 +1,23 @@
+// Test file to verify helyxHexMeshDict structure
+castellatedMesh    true;
+snap               true;
+addLayers          true;
+autoBlockMesh      true;
+
+geometry
+{
+    inlet.stl             {type triSurfaceMesh;name inlet;}
+    outlet.stl            {type triSurfaceMesh;name outlet;}
+}
+
+castellatedMeshControls
+{
+    maxLocalCells       2000000;
+    maxGlobalCells      3000000;
+    minRefinementCells  10;
+    
+    features
+    {
+        level    2;
+    }
+}

@@ -1,0 +1,36 @@
+/* OpenFOAM Tree View Styling */
+
+/* Block items - Blue */
+.monaco-list-row[data-extension-openfoam="block"] .monaco-icon-label .monaco-icon-label-container {
+    color: #0078d4 !important;
+}
+
+/* Key-Value items - Green */
+.monaco-list-row[data-extension-openfoam="keyvalue"] .monaco-icon-label .monaco-icon-label-container {
+    color: #107c10 !important;
+}
+
+/* Key items - Orange */
+.monaco-list-row[data-extension-openfoam="key"] .monaco-icon-label .monaco-icon-label-container {
+    color: #ff8c00 !important;
+}
+
+/* Numeric values - Purple */
+.monaco-list-row[data-extension-openfoam="number"] .monaco-icon-label .monaco-icon-label-container {
+    color: #5c2d91 !important;
+}
+
+/* Boolean values - Red */
+.monaco-list-row[data-extension-openfoam="boolean"] .monaco-icon-label .monaco-icon-label-container {
+    color: #d13438 !important;
+}
+
+/* String values - Yellow/Gold */
+.monaco-list-row[data-extension-openfoam="string"] .monaco-icon-label .monaco-icon-label-container {
+    color: #b7950b !important;
+}
+
+/* Other values - Light Purple */
+.monaco-list-row[data-extension-openfoam="constant"] .monaco-icon-label .monaco-icon-label-container {
+    color: #8b5fbf !important;
+}

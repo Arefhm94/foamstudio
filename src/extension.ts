@@ -24,8 +24,20 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(disposable);
 
 	const treeProvider = new OpenFOAMTreeProvider(context);
-
 	vscode.window.registerTreeDataProvider('openfoamOutline', treeProvider);
+
+	// Add CSS styling for the tree view
+	const css = `
+		.openfoamOutline .monaco-list-row .monaco-tl-contents .monaco-highlighted-label .label-name {
+			color: var(--vscode-openfoamOutline-keyForeground) !important;
+		}
+		.openfoamOutline .monaco-list-row .monaco-tl-contents .monaco-highlighted-label .label-description {
+			color: var(--vscode-openfoamOutline-valueForeground) !important;
+		}
+	`;
+
+	// Create a style element and inject it
+	const styleElement = vscode.workspace.createFileSystemWatcher('**/*.css');
 
 	vscode.commands.registerCommand('foamstudio.revealLine', (line: number) => {
 		const editor = vscode.window.activeTextEditor;
@@ -36,16 +48,51 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
-	vscode.workspace.onDidOpenTextDocument((document) => {
-		if (isSupportedOpenFOAMFile(document)) {
-			treeProvider.updateTree(document);
+	// Register refresh command
+	vscode.commands.registerCommand('foamstudio.refreshOutline', () => {
+		const editor = vscode.window.activeTextEditor;
+		if (editor && isSupportedOpenFOAMFile(editor.document)) {
+			treeProvider.updateTree(editor.document);
+			vscode.window.showInformationMessage('OpenFOAM Outline refreshed!');
 		}
 	});
 
-	vscode.workspace.onDidChangeTextDocument((event) => {
-		if (isSupportedOpenFOAMFile(event.document)) {
-			treeProvider.updateTree(event.document);
+	// Register collapse all command
+	vscode.commands.registerCommand('foamstudio.collapseAll', () => {
+		vscode.commands.executeCommand('workbench.actions.treeView.openfoamOutline.collapseAll');
+	});
+
+	// Register test outline command
+	vscode.commands.registerCommand('foamstudio.testOutline', () => {
+		const editor = vscode.window.activeTextEditor;
+		if (editor && isSupportedOpenFOAMFile(editor.document)) {
+			treeProvider.updateTree(editor.document);
+			vscode.window.showInformationMessage(`OpenFOAM Outline updated for: ${editor.document.fileName}`);
+		} else {
+			vscode.window.showWarningMessage('Please open a supported OpenFOAM file (controlDict, fvSchemes, etc.)');
 		}
+	});
+
+	vscode.languages.registerDocumentSymbolProvider({ language: 'openfoam' }, new OpenFOAMSymbolProvider());
+
+	vscode.window.registerTreeDataProvider('openfoamOutline', treeProvider);
+
+	vscode.workspace.onDidOpenTextDocument((document) => {
+	    if (isSupportedOpenFOAMFile(document)) {
+	        treeProvider.updateTree(document);
+	    }
+	});
+
+	vscode.workspace.onDidChangeTextDocument((event) => {
+	    if (isSupportedOpenFOAMFile(event.document)) {
+	        treeProvider.updateTree(event.document);
+	    }
+	});
+
+	vscode.window.onDidChangeActiveTextEditor((editor) => {
+	    if (editor && isSupportedOpenFOAMFile(editor.document)) {
+	        treeProvider.updateTree(editor.document);
+	    }
 	});
 
 	if (vscode.window.activeTextEditor) {
@@ -56,11 +103,14 @@ export function activate(context: vscode.ExtensionContext) {
 	}
 
 	function isSupportedOpenFOAMFile(document: vscode.TextDocument): boolean {
-		const supportedExtensions = ['.dict', 'controlDict', 'fvSchemes', 'fvSolution'];
-		return supportedExtensions.some(ext => document.fileName.endsWith(ext));
+		const supportedExtensions = ['.dict', 'controlDict', 'fvSchemes', 'fvSolution', 'caseSetupDict', 'decomposeParDict', 'fvOptions', 'helyxHexMeshDict', 'probesLocation', 'surfaceFeatureExtractDict', 'surfaceIntersectionDict', 'topoSetDict'];
+		const fileName = document.fileName.split('\\').pop() || document.fileName.split('/').pop() || '';
+		return supportedExtensions.some(ext => 
+			fileName.endsWith(ext) || 
+			fileName === ext ||
+			(ext.startsWith('.') && fileName.endsWith(ext))
+		);
 	}
-
-	vscode.languages.registerDocumentSymbolProvider({ language: 'openfoam' }, new OpenFOAMSymbolProvider());
 }
 
 // This method is called when your extension is deactivated
