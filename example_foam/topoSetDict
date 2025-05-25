@@ -1,0 +1,73 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.2.2                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      topoSetDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+actions
+(
+/*
+{
+    name screen_set;type cellSet;
+    action new;
+    source surfaceToCell;
+    sourceInfo
+    {
+        file "constant/triSurface/_porous.stl";
+        useSurfaceOrientation false;
+        outsidePoints   ((0.0 0.0 300.0));
+        includeCut      true;
+        includeInside   true;
+        includeOutside  false;
+        nearDistance    -1;
+        curvature       0.9;
+    }
+}
+
+// conver to cellZone
+{name screen_zone;type cellZoneSet;action new;source setToCellZone;sourceInfo{set screen_set;}}
+
+// convert to cellZone
+{name porous_1_zone;type cellZoneSet;action new;source setToCellZone;sourceInfo{set porous_1_set;}}
+
+// create total cellSet for subtraction
+{name tot_zone;type cellSet;action new;source cellToCell;sourceInfo{set porous_1_set;}}
+
+
+
+{
+    name porous_2_set;type cellSet;
+    action new;
+    source surfaceToCell;
+    sourceInfo
+    {
+        file "constant/triSurface/_porous_2.stl";
+        useSurfaceOrientation false;
+        outsidePoints   ((0.0 0.0 300.0));
+        includeCut      true;
+        includeInside   true;
+        includeOutside  false;
+        nearDistance    -1;
+        curvature       0.9;
+    }
+}
+// remove the other cellzone
+{name porous_2_set;type cellSet;action delete;source cellToCell;sourceInfo{set tot_zone;}}
+
+// convert to cellZone
+{name porous_2_zone;type cellZoneSet;action new;source setToCellZone;sourceInfo{set porous_2_set;}}
+
+// create total cellSet for subtraction
+{name tot_zone;type cellSet;action add;source cellToCell;sourceInfo{set porous_2_set;}}
+
+*/
+);

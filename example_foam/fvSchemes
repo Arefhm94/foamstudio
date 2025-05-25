@@ -1,0 +1,85 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+|       o          |                                                          |
+|    o     o       | HELYX(R) Core: Open-source CFD for Enterprise            |
+|   o   O   o      | Version: dev                                             |
+|    o     o       | ENGYS Ltd. <http://engys.com/>                           |
+|       o          |                                                          |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      binary;
+    class       dictionary;
+    arch        "LSB;label=32;scalar=64";
+    location    "../system";
+    object      fvSchemes;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+ddtSchemes
+{
+    default         Euler;
+}
+
+gradSchemes
+{
+    turbulence      cellLimited Gauss linear 1;
+    grad(k)         cellLimited Gauss linear 1;
+    grad(epsilon)   cellLimited Gauss linear 1;
+    default         Gauss linear;
+    grad(U)         cellLimited taylorGauss linear 1;
+    gradp           cellLimited taylorGauss linear 1;
+    grad(p)         cellLimited taylorGauss linear 1;
+    gradm(p)        Gauss linear;
+}
+
+divSchemes
+{
+    div(phi,k)      bounded Gauss linearUpwind turbulence;
+    div(phi,epsilon) bounded Gauss linearUpwind turbulence;
+    default         none;
+    div(phi,U)      bounded Gauss linearUpwindV grad(U);
+    div(U)          Gauss midPoint;
+    div((nuEff*dev2(T(grad(U))))) Gauss linear;
+    div(R)          Gauss linear;
+    div(nonlinearStress) Gauss linear;
+    div((muEff*dev2(grad(U).T()))) Gauss linear;
+    div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
+    div((nu*dev2(T(grad(U))))) Gauss linear;
+}
+
+laplacianSchemes
+{
+    laplacian(DkEff,k) Gauss linear limited 0.333;
+    laplacian(DepsilonEff,epsilon) Gauss linear limited 0.333;
+    default         Gauss linear corrected;
+    laplacian(nuEff,U) Gauss linear limited 0.3333;
+    laplacian(-Df,p) Gauss linear limited 0.333;
+}
+
+interpolationSchemes
+{
+    default         linear;
+    interpolate(HbyA) linear;
+    interpolate(D)  midPoint;
+    gradp           midPoint;
+}
+
+snGradSchemes
+{
+    default         limited 0.333;
+}
+
+wallDist
+{
+    method          meshWave;
+}
+
+fluxRequired
+{
+    default         no;
+    p               ;
+}
+
+
+// ************************************************************************* //

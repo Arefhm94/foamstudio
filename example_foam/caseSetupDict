@@ -1,0 +1,498 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+|       o          |                                                          |
+|    o     o       | HELYX(R): Open-source CFD for Enterprise                 |
+|   o   O   o      | Version: v4.0.0--RC1                                     |
+|    o     o       | Engys Ltd. http://www.engys.com                          |
+|       o          |                                                          |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version  2.0;
+    format   ascii;
+    class    dictionary;
+    location system;
+    object   caseSetupDict;
+}
+
+global
+{
+    modificationSwitches
+    {
+        resetInternalFields     true;
+        resetBoundaryFields     true;
+        resetSystemDicts        true;
+        resetConstDicts         true;
+        resetBoundaryMesh       true;
+        deleteUnusedFields      true;
+        reuseExistingDicts      false;
+        strictPatchNameChecking false;
+    }
+    system
+    {
+        controlDict
+        {
+            startFrom         latestTime;
+            stopAt            endTime;
+            endTime           400.0;
+            deltaT            constant 1.0;
+            adjustTimeStep    false;
+            writeControl      timeStep;
+            writeInterval     200;
+            purgeWrite        1;
+            writeFormat       binary;
+            writeCompression  uncompressed;
+            writePrecision    10;
+            timeFormat        general;
+            timePrecision     6;
+            graphFormat       raw;
+            runTimeModifiable yes;
+            libs              (        "libHelyxCoupled.so" );
+            application       helyxSolve;
+        }
+    }
+    
+    
+    functions
+    {
+        VR
+        {
+            type               volumeReport;
+            regions            (region0 );
+            fields             (U epsilon k p );
+            writeControl       timeStep;
+            writeInterval      1;
+            executeControl     timeStep;
+            executeInterval    1;
+            functionObjectLibs ("libreport.so" );
+        }
+
+        probes
+        {
+            functionObjectLibs ( "libsampling.so" );
+            enabled         true;
+            #include        "$FOAM_CASE/system/probesLocation"
+            fields          ( U p k epsilon );
+            executeControl  timeStep;
+            libs            ( "libsampling.so" );
+            type            probes;
+            name            probes;
+            writeControl    writeTime;
+            writeInterval   1;
+        }
+
+        vertical_profile
+        {
+            type                sets;
+            functionObjectLibs  ("libsampling.so");
+            regions             ( region0 );
+            fields              ( U k );
+            interpolationScheme cellPoint;
+            setFormat           csv;
+            sets
+            (	
+                vertical_line_center
+                {
+                    type			uniform;
+                    axis			xyz;
+                    nPoints			100;
+                    start 			(0.0 750.0 0.0);
+                    end			    (0.0 750.0 300.0);
+                }
+				vertical_line_hilltop
+                {
+                    type			uniform;
+                    axis			xyz;
+                    nPoints			100;
+                    start 			(400 -800 30.0);
+                    end			    (400 -800 300.0);
+                }
+            );
+            writeControl    onEnd;
+            writeInterval   1;
+            executeControl  onEnd;
+            executeInterval 1;
+        }
+		
+        surfaces
+        {
+            type                surfaces;
+            regions             ( region0 );
+            fields              ( U k UMean kMean);
+            interpolationScheme cellPointFace;
+            surfaceFormat       vtkb;
+            writeFields         true;
+            writeStatistics     false;
+            surfaces
+            (
+                ped_level_surface
+                {
+                    type        sampledTriSurfaceMesh;
+                    surface     "sampling_plane.stl";
+                    source      cells;
+                    interpolate true;
+                    maxEdgeLengthSearch true;
+                }
+
+                sample_terraces_PROPOSED
+                {
+                    type        sampledTriSurfaceMesh;
+                    surface     "sample_terraces_PROPOSED.stl";
+                    source      cells;
+                    interpolate true;
+                    maxEdgeLengthSearch true;
+                }
+                
+            );
+            writeControl       onEnd;
+            writeInterval      1;
+            executeControl     onEnd;
+            executeInterval    1;
+            functionObjectLibs ("libsampling.so");
+        }    
+        FA
+        {
+            type         fieldAverage;
+            regions      ( region0 );
+            timeStart    300.0;
+            writeControl onEnd;
+            fields
+            (
+                U
+                {
+                    mean       on;
+                    prime2Mean off;
+                    base       time;
+                }
+                k
+                {
+                    mean       on;
+                    prime2Mean off;
+                    base       time;
+                }
+            );
+            functionObjectLibs ("libfieldFunctionObjects.so");
+        }	
+    }
+}
+
+regions
+{
+    region0
+    {
+        state (steady pressureCoupled ras);
+        boundaryMesh
+        {
+            inlet  {type inlet;}
+            outlet {type outlet;}
+            left   {type symmetry;}
+            right  {type symmetry;}
+            top    {type symmetry;}
+        }
+        turbulenceModel realizableKE;
+        materials       (air);
+        materialProperties
+        {
+            air
+            {
+                materialName    air;
+                materialType    fluid;
+                molWeight       28.96;
+                energy          sensibleEnthalpy;
+                equationOfState rhoConst;
+                equationOfStateCoeffs
+                {
+                    rho 1.177;
+                }
+                muModel scalarFunction1;
+                muModelCoeffs
+                {
+                    mu constant 1.846E-5;
+                }
+                thermodynamics hConst;
+                thermodynamicsCoeffs
+                {
+                    Hf 0.0;
+                    Cp 1004.9;
+                }
+                kappaModel scalarFunction1;
+                kappaModelCoeffs
+                {
+                    kappa 0.0262;
+                }
+                wconcentrationTransport
+                {
+                    D [0 2 -1 0 0 0 0] 2.0E-5;
+                    Sct 0.6;
+                    Cp [0 2 -2 -1 0 0 0] 1930.0;
+                }
+                buoyancyModelCoeffs
+                {
+                    beta 0.0034;
+                }
+                referenceFields
+                {
+                    p [1 -1 -2 0 0 0 0] 101325.0;
+                    TConst [0 0 0 1 0 0 0] 300.0;
+                }
+            }
+        }
+
+        constant
+        {
+            g
+            {
+                value ( 0.0 0.0 -9.81 );
+                dimensions [0  1 -2  0 0 0 0];
+            }
+            
+            turbulenceProperties
+            {
+                simulationType RAS;
+                RAS
+                {
+                    RASModel    realizableKE;
+                    turbulence  on;
+                    printCoeffs on;
+                    realizableKECoeffs
+                    {
+                        maxTurbViscosityRatio 1e+10;
+                    }
+                }
+            }
+        }
+        
+        system
+        {
+            fvSchemes
+            {
+                ddtSchemes
+                {
+                    default steadyState;
+                }
+                
+                divSchemes
+                {           
+                    div(phi,U) bounded Gauss linearUpwindV grad(U);
+                    div(phi,k) bounded Gauss deferred vanLeer;
+                    div(phi,epsilon) bounded Gauss deferred vanLeer;
+                }
+            }
+
+            fvSolution
+            {
+                solvers
+                {
+                    "(Up|UpFinal)"
+                    {
+                        solver          AMG;
+                        cycle           W-cycle;
+                        coarseningType  Clustering;
+                        clusteringMethod Raithby;
+                        smoother        ILU;
+                        residualOutput  RMS;
+                        convergenceCriteria component;
+                        component       3;
+                        relTol          0.1;
+                        tolerance       1e-16;
+                        minIter         1;
+                        maxIter         3;
+                        scale           true; 
+                    }
+                }
+
+				relaxationFactors
+				{
+                    fields
+                    {
+                        rho 1;
+                        phi 1;
+                        //phi table ((0 0.8) (50 0.8) (51 0.9) (100 0.9) (101 1)); 
+                    }
+					equations
+					{
+                        k               0.95;
+                        epsilon         0.95;
+					}
+				}
+            }
+            
+            fvOptions
+            {
+                flowSolver
+                {
+                    type singlePhaseCoupledPressureVelocity;
+                    timeMode pseudoTime;
+                    timeEnd 100000;
+                    localRelax true;                                                            
+                    localRelaxCoeffs                                                            
+                    { 
+                        relaxType Courant;
+                        minCourant 0.1;
+                        maxCourant 2000; 
+                        minCourantRelax table ( ( 0 0.95 ) ( 50 0.95 ) ( 51 0.98 ) );
+                        maxCourantRelax table ( ( 0 0.7 ) ( 50 0.7 ) ( 51 0.8 ) );
+                    }
+                }
+                
+                turbulenceSolver
+                {
+                    type turbulenceSolver;
+                    timeEnd 100000;
+                } 
+                
+                velocityLimiter
+                {
+                    type velocityLimiterSource;
+                    active true;
+                    velocityLimiterSourceCoeffs
+                    {
+                        Ulimit 120.0;
+                        selectionMode all;
+                        velocityDamp false;
+                        velocityClip true;
+                        verbose true;
+                    }
+                }
+        
+                /*screen_porous
+				{
+					type	explicitPorositySource;
+					explicitPorositySourceCoeffs
+					{
+						selectionMode	cellZone;
+						cellZone		screen_zone;
+						type			DarcyForchheimer;
+						DarcyForchheimerCoeffs
+						{
+							coeffsMode	standard;
+							d [0 -2 0 0 0 0 0] ( 0.0 0.0 0.0 );
+							f [0 -1 0 0 0 0 0] ( 2.5 2.5 2.5 );
+							temperatureDependence	false;
+							spatialDependance		false;
+						}
+					}
+				}*/
+            }
+        }
+        
+        fields
+        {
+            U{initialisation{type potentialFlow;initialiseUBCs true;rhoRef 1.177;}}
+            p{initialisation{type potentialFlow;}}
+            k{initialisation{type Prandtl;}}
+            epsilon{initialisation{type Prandtl;}}
+        }
+        
+        boundaryConditions
+        {
+            ground_outer_0_1 {nut{type nutkAtmRoughWallFunction;value uniform 0.001;roughnessHeight 0.1;}}
+            ground_outer_0_2 {nut{type nutkAtmRoughWallFunction;value uniform 0.001;roughnessHeight 0.2;}}
+            ground_outer_0_3 {nut{type nutkAtmRoughWallFunction;value uniform 0.001;roughnessHeight 0.3;}}
+            ground_outer_0_03{nut{type nutkAtmRoughWallFunction;value uniform 0.001;roughnessHeight 0.03;}}
+            ground_outer_0_4 {nut{type nutkAtmRoughWallFunction;value uniform 0.001;roughnessHeight 0.4;}}
+            ground_outer_0_5 {nut{type nutkAtmRoughWallFunction;value uniform 0.001;roughnessHeight 0.5;}}
+            ground_outer_0_05{nut{type nutkAtmRoughWallFunction;value uniform 0.001;roughnessHeight 0.05;}}
+            ground_outer_0_15{nut{type nutkAtmRoughWallFunction;value uniform 0.001;roughnessHeight 0.15;}}
+
+            inlet
+            {
+                U
+                {
+                    type windProfileDirectionVelocity;
+                    value uniform ( 0.0 0.0 0.0 );
+                    profile RHWindProfile;
+                    outOfBounds clamp;
+                    distanceType z;
+                    profileCoeffs
+                    {
+                        Cmu 0.09;
+                        Kappa 0.41;
+                        Uref <DUMMY_Uref>;
+                        Href <DUMMY_Zref>;
+                        z0 <DUMMY_z0>;
+                    }
+                    normalDirection true;
+                    windDirection constant 0.0;
+                }
+                
+                p
+                {
+                    type fixedFluxPressure;
+                    value uniform 0.0;
+                }
+                
+                k
+                {
+                    type interpolatedFixedValue;
+                    value uniform 0.01;
+                    profile RHWindKineticEnergyProfile;
+                    outOfBounds clamp;
+                    distanceType z;
+                    profileCoeffs
+                    {
+                        Cmu 0.09;
+                        Kappa 0.41;
+                        Uref <DUMMY_Uref>;
+                        Href <DUMMY_Zref>;
+                        z0 <DUMMY_z0>;
+                    }
+                }
+                
+                epsilon
+                {
+                    type interpolatedFixedValue;
+                    value uniform 0.01;
+                    profile RHWindDissipationRateProfile;
+                    outOfBounds clamp;
+                    distanceType z;
+                    profileCoeffs
+                    {
+                        Cmu 0.09;
+                        Kappa 0.41;
+                        Uref <DUMMY_Uref>;
+                        Href <DUMMY_Zref>;
+                        z0 <DUMMY_z0>;
+                    }
+                }
+                
+                nut
+                {
+                    type calculated;
+                    value uniform 0.0;
+                }
+            }
+            
+            outlet
+            {
+                U
+                {
+                    type pressureVelocity;
+                    value uniform ( 0.0 0.0 0.0 );
+                }
+                p
+                {
+                    type fixedValue;
+                    value uniform 0.0;
+                }
+                k
+                {
+                    type turbulentIntensityKineticEnergyInlet;
+                    intensity 0.05;
+                    value uniform 0.1;
+                }
+                epsilon
+                {
+                    type turbulentMixingLengthDissipationRateInlet;
+                    mixingLength 0.01;
+                    value uniform 0.01;
+                }
+                nut
+                {
+                    type calculated;
+                    value uniform 0.001;
+                }
+            }
+        }
+    }
+}
+

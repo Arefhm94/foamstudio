@@ -1,0 +1,62 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+|       o          |                                                          |
+|    o     o       | HELYX(R) Core: Open-source CFD for Enterprise            |
+|   o   O   o      | Version: dev                                             |
+|    o     o       | ENGYS Ltd. <http://engys.com/>                           |
+|       o          |                                                          |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      binary;
+    class       dictionary;
+    arch        "LSB;label=32;scalar=64";
+    location    "../system";
+    object      fvOptions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+velocityLimiter
+{
+    type            velocityLimiterSource;
+    active          true;
+    velocityLimiterSourceCoeffs
+    {
+        Ulimit          120;
+        selectionMode   all;
+        velocityDamp    false;
+        velocityClip    true;
+        verbose         true;
+    }
+}
+
+trees_porous
+{
+    type            explicitPorositySource;
+    active          true;
+    explicitPorositySourceCoeffs
+    {
+        selectionMode   cellZone;
+        cellZone        trees;
+        type            DarcyForchheimer;
+        DarcyForchheimerCoeffs
+        {
+            d               [ 0 -2 0 0 0 0 0 ] ( 0 0 0 );
+            f               [ 0 -1 0 0 0 0 0 ] ( 0.1625 0.1625 0.1625 );
+            coordinateSystem
+            {
+                type            cartesian;
+                origin          ( 0 0 0 );
+                coordinateRotation
+                {
+                    type            axesRotation;
+                    e1              ( 1 0 0 );
+                    e2              ( 0 1 0 );
+                }
+            }
+        }
+    }
+}
+
+
+// ************************************************************************* //

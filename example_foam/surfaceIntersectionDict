@@ -1,0 +1,69 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.4.0                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      surfaceFeatureExtractDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+
+intersection_01
+{
+    fileName    		surroundings.stl;
+	intersectionMethod 	surface;
+	eMeshName			surroundings_intersect;
+	surfaceCoeffs
+	{
+		name	ground_inner.stl;
+		type	triSurfaceMesh;
+	}
+	writeVTKfalse;
+}
+
+intersection_02
+{
+	fileName    		near_surroundings.stl;
+	intersectionMethod 	surface;
+	eMeshName			near_surroundings_intersect;
+	surfaceCoeffs
+	{
+		name	ground_inner.stl;
+		type	triSurfaceMesh;
+	}
+	writeVTKfalse;
+}
+
+intersection_03
+{
+	fileName    		buildings_proposed.stl;
+	intersectionMethod 	surface;
+	eMeshName			buildings_proposed_intersect;
+	surfaceCoeffs
+	{
+		name	ground_inner.stl;
+		type	triSurfaceMesh;
+	}
+	writeVTKfalse;
+}
+
+intersection_04
+{
+    fileName    		canopy.stl;
+	intersectionMethod 	surface;
+	eMeshName			canopy_intersect;
+	surfaceCoeffs
+	{
+		name	ground_inner.stl;
+		type	triSurfaceMesh;
+	}
+	writeVTKfalse;
+}

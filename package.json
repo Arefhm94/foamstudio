@@ -9,13 +9,39 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onLanguage:plaintext"
+  ],
   "main": "./out/extension.js",
   "contributes": {
-    "commands": [
+    "languages": [
       {
-        "command": "foamstudio.helloWorld",
-        "title": "Hello World"
+        "id": "openfoam",
+        "extensions": [
+          ".dict",
+          "controlDict",
+          "fvSchemes",
+          "fvSolution",
+          "caseSetupDict",
+          "decomposeParDict",
+          "fvOptions",
+          "helyxHexMeshDict",
+          "probesLocation",
+          "surfaceFeatureExtractDict",
+          "surfaceIntersectionDict",
+          "topoSetDict"
+        ],
+        "aliases": [
+          "OpenFOAM"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "openfoam",
+        "scopeName": "source.openfoam",
+        "path": "./syntaxes/openfoam.tmLanguage.json"
       }
     ]
   },

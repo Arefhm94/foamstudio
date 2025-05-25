@@ -1,0 +1,243 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+|       o          |                                                          |
+|    o     o       | HELYX(R) Core: Open-source CFD for Enterprise            |
+|   o   O   o      | Version: 3.4.0                                           |
+|    o     o       | ENGYS Ltd. <http://engys.com/>                           |
+|       o          |                                                          |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      binary;
+    class       dictionary;
+    arch        "LSB;label=32;scalar=64";
+    location    "../system";
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     helyxCoupled;
+
+startFrom       latestTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         3000;
+
+deltaT          constant 5;
+
+writeControl    timeStep;
+
+writeInterval   200;
+
+purgeWrite      1;
+
+writeFormat     binary;
+
+writePrecision  10;
+
+writeCompression uncompressed;
+
+timeFormat      general;
+
+timePrecision   6;
+
+graphFormat     raw;
+
+runTimeModifiable true;
+
+libs            ( "" );
+
+functions
+{
+    VR2
+    {
+        functionObjectLibs ( "libreport.so" );
+        logToFile       yes;
+        fields          ( U p k epsilon nut);
+        executeControl  timeStep;
+        type            volumeReport;
+        regions         ( region0 );
+        writeControl    timeStep;
+        writeInterval   1;
+    }
+    probes
+    {
+        functionObjectLibs ( "libsampling.so" );
+        enabled         true;
+        probeLocations  ( ( -8.49771 -11.0334 13.9538 ) ( -13.8379 -4.3692 13.957 ) ( -39.4759 179.072 14.2476 ) ( -57.812 -124.776 15.882 ) ( 109.783 -33.661 11.4158 ) ( 116.721 -26.5443 11.3138 ) ( 116.877 -37.8309 11.3068 ) ( -67.7185 -91.0156 16.1673 ) ( -88.8763 -45.442 17.2124 ) ( -137.205 35.0986 18.2881 ) ( -125.029 -25.318 19.0501 ) ( -139.786 -0.989258 19.1708 ) ( -154.773 -37.3439 20.7176 ) ( -161.768 -22.2384 20.7865 ) ( 60.8987 199.772 11.3162 ) ( 35.175 177.962 11.7134 ) ( 6.33664 168.485 12.6512 ) ( -44.7038 172.119 14.3392 ) ( -25.1938 158.943 13.5606 ) ( -11.9776 147.997 13.3655 ) ( -6.13461 129.383 13.1218 ) ( 0.56366 134.239 13.0102 ) ( -31.3327 152.489 13.8183 ) ( -16.1983 139.526 13.4708 ) ( 113.02 -18 11.2432 ) ( 123.89 -40.8197 11.1834 ) ( 112.871 -41.7185 11.3664 ) ( 114.235 -28.9597 11.3811 ) ( 115.491 -175.34 9.5448 ) ( 100.715 -161.003 9.87711 ) ( 78.968 -159.672 10.4206 ) ( 62.9365 -146.799 11.1403 ) ( 43.3008 -146.825 11.9092 ) ( 24.1893 -138.736 12.923 ) ( 55.2929 72.7515 11.9336 ) ( 64.3224 62.129 12.1326 ) ( 74.2059 49.8888 11.7487 ) ( 85.4133 36.105 11.4836 ) ( 98.1027 20.8589 10.9654 ) ( -92.1817 57.9296 16.6613 ) ( -83.2333 57.4201 16.1469 ) ( -65.0079 57.7248 14.816 ) ( -48.0357 63.7589 14.4403 ) ( -47.5833 -49.2941 16.3981 ) ( -53.4765 -36.5001 16.5046 ) ( -63.1507 28.4102 15.7914 ) ( -64.8243 15.6962 16.2408 ) ( -63.8478 -19.6481 16.8119 ) ( -66.8189 -5.75916 16.5077 ) ( -66.2996 4.44995 16.3554 ) ( 100.122 -7.1832 11.244 ) ( 96.8633 -57.3831 11.6418 ) ( 79.8951 -63.244 11.8764 ) ( 73.2141 -80.1403 12.1207 ) ( 59.2266 -83.1183 12.4418 ) ( 41 -100.734 12.8585 ) ( 32.8456 -108.593 13.0415 ) ( 53.672 -98.6064 12.7115 ) ( 37.8964 -113.778 13.1131 ) ( 32.2292 -119.67 13.2592 ) ( 27.1888 -127.024 13.2034 ) ( 20.1453 -123.985 13.3712 ) ( 26.1199 -130.463 12.9108 ) ( 31.9329 -134.412 12.5432 ) ( 26.1788 -115.449 13.2888 ) ( 17.5925 -127.447 13.4532 ) ( 5.9722 -131.329 13.6098 ) ( -8.05963 -125.573 14.4858 ) ( 2.5 -123.104 14.0007 ) ( -14.4235 -114.636 14.7466 ) ( 100.348 129.86 15.1914 ) ( 90.0647 146.935 14.9765 ) ( 65.9126 130.833 13.734 ) ( 119.157 139.38 15.9419 ) ( 71.2916 112.698 13.2438 ) ( 54.3827 102.613 12.0924 ) ( 46.8069 67.7344 11.9616 ) ( 32.7866 84.6625 11.3372 ) ( 19.2513 82.5955 11.7294 ) ( -8.62518 66.0209 12.9546 ) ( -27.9181 52.6763 14.0193 ) ( -46.9589 42.3996 14.9886 ) ( 48.6561 120.068 12.4729 ) ( 32.55 110.574 11.9457 ) ( 13.477 117.383 11.9401 ) ( -28.4803 74.2055 13.4371 ) ( 3.71411 91.9435 12.0993 ) ( 6.52087 112.117 11.9028 ) ( -1.60983 -22.3545 13.8095 ) ( -13.5523 -56.741 15.3818 ) ( -23.4912 -100.971 15.2591 ) ( -27.0926 -93.3472 15.5082 ) ( -33.5994 -74.0574 16.1117 ) ( -41.3866 -62.6462 16.2262 ) ( -19.9521 -63.7976 15.5911 ) ( -23.0449 -74.8279 15.9272 ) ( -31.5623 -82.5077 15.734 ) ( -29.0089 -89.2048 15.6411 ) ( -30.2321 -86.4078 15.6663 ) ( -37.6613 -70.513 16.1117 ) ( -39.5239 -66.5796 16.169 ) ( -25.3369 -70.8599 15.9272 ) ( -16.5767 -69.7091 15.4534 ) ( -9.16797 -61.2731 15.3327 ) ( 2.5 -38.8843 14.5465 ) ( 15.6601 -33.0686 13.9516 ) ( -11.7991 -38.8445 15.7724 ) ( -20.923 -27.8967 17.1239 ) ( 19.1866 -22.1665 13.4629 ) ( 38.7773 0.426483 12.6215 ) ( 52.0544 8.25107 12.2683 ) ( 57.5508 24.4527 11.9154 ) ( 63.9934 43.6505 11.4424 ) ( 75.5372 28.0969 11.2906 ) ( 55.2776 55.9963 11.7783 ) ( -1.75922 -52.8372 15.212 ) ( 32.7439 -14.3424 13.1679 ) ( 62.1275 19.7275 11.8265 ) ( 66.457 34.3726 11.4711 ) ( 70.4572 28.9588 11.3956 ) ( 66.9595 39.4194 11.4143 ) ( 79.9047 21.7601 11.0682 ) ( 85.8833 13.7777 11.0068 ) );
+        fields          ( U k );
+        executeControl  timeStep;
+        libs            ( "libsampling.so" );
+        type            probes;
+        name            probes;
+        writeControl    writeTime;
+        writeInterval   1;
+    }
+    vertical_profile
+    {
+        type            sets;
+        functionObjectLibs ( "libsampling.so" );
+        regions         ( region0 );
+        fields          ( U k );
+        interpolationScheme cellPoint;
+        setFormat       csv;
+        sets            
+        (
+            vertical_line_center_1250
+            {
+                type            uniform;
+                axis            xyz;
+                nPoints         100;
+                start           ( 0 1250 0 );
+                end             ( 0 1250 300 );
+            }
+
+            vertical_line_center_1050
+            {
+                type            uniform;
+                axis            xyz;
+                nPoints         100;
+                start           ( 0 1050 0 );
+                end             ( 0 1050 300 );
+            }
+
+            vertical_line_center_950
+            {
+                type            uniform;
+                axis            xyz;
+                nPoints         100;
+                start           ( 0 950 0 );
+                end             ( 0 950 300 );
+            }
+
+            vertical_line_center_850
+            {
+                type            uniform;
+                axis            xyz;
+                nPoints         100;
+                start           ( 0 850 0 );
+                end             ( 0 850 300 );
+            }
+
+            vertical_line_center_750
+            {
+                type            uniform;
+                axis            xyz;
+                nPoints         100;
+                start           ( 0 750 0 );
+                end             ( 0 750 300 );
+            }
+
+            vertical_line_center_650
+            {
+                type            uniform;
+                axis            xyz;
+                nPoints         100;
+                start           ( 0 650 0 );
+                end             ( 0 650 300 );
+            }
+
+        );
+        writeControl    onEnd;
+        writeInterval   1;
+        executeControl  onEnd;
+        executeInterval 1;
+    }
+    surfaces
+    {
+        functionObjectLibs ( "libsampling.so" );
+        fields          ( U k UMean kMean );
+        interpolationScheme cellPointFace;
+        surfaceFormat   vtkb;
+        surfaces        
+        (
+            ped_level_surface_NODES
+            {
+                type            sampledTriSurfaceMesh;
+                surface         "sampling_plane.stl";
+                source          cells;
+                interpolate     true;
+                maxEdgeLengthSearch true;
+            }
+
+            ped_level_surface_CELLS
+            {
+                type            sampledTriSurfaceMesh;
+                surface         "sampling_plane.stl";
+                source          cells;
+                interpolate     false;
+                maxEdgeLengthSearch true;
+            }
+
+            ter_level_surface_NODES
+            {
+                type            sampledTriSurfaceMesh;
+                surface         "sample_terraces_PROPOSED.stl";
+                source          cells;
+                interpolate     true;
+                maxEdgeLengthSearch true;
+            }            
+
+            ter_level_surface_CELLS
+            {
+                type            sampledTriSurfaceMesh;
+                surface         "sample_terraces_PROPOSED.stl";
+                source          cells;
+                interpolate     false;
+                maxEdgeLengthSearch true;
+            }
+
+        )
+;
+        writeControl    onEnd;
+        type            surfaces;
+        regions         ( region0 );
+        writeFields     true;
+        writeStatistics false;
+        writeInterval   1;
+        executeControl  onEnd;
+        executeInterval 1;
+    }
+    FA
+    {
+        functionObjectLibs ( "libfieldFunctionObjects.so" );
+        fields          
+        (
+            U
+            {
+                mean            on;
+                prime2Mean      off;
+                base            time;
+            }
+
+            k
+            {
+                mean            on;
+                prime2Mean      off;
+                base            time;
+            }
+
+        );
+        executeControl  timeStep;
+        writeControl    onEnd;
+        type            fieldAverage;
+        regions         ( region0 );
+        timeStart       2500;
+    }
+    fileUpdate1
+    {
+        type            timeActivatedFileUpdate;
+        libs            ( "libutilityFunctionObjects.so" );
+        writeControl    timeStep;
+        writeInterval   1;
+        fileToUpdate    "$FOAM_CASE/system/fvSchemes";
+        timeVsFile      ( ( 750 "$FOAM_CASE/system/fvSchemes.2ndorder" ) );
+        sleep           5;
+    }
+}
+
+
+// ************************************************************************* //

@@ -1,0 +1,83 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+|       o          |                                                          |
+|    o     o       | HELYX(R) Core: Open-source CFD for Enterprise            |
+|   o   O   o      | Version: dev                                             |
+|    o     o       | ENGYS Ltd. <http://engys.com/>                           |
+|       o          |                                                          |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      binary;
+    class       dictionary;
+    arch        "LSB;label=32;scalar=64";
+    location    "../system";
+    object      fvSolution;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+solvers
+{
+    k
+    {
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        minIter         1;
+        tolerance       1e-12;
+        relTol          0.001;
+        maxIter         20;
+    }
+    epsilon
+    {
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        minIter         1;
+        tolerance       1e-12;
+        relTol          0.001;
+        maxIter         20;
+    }
+    Up
+    {
+        solver          AMG;
+        cycle           V-cycle;
+        coarseningType  Raithby;
+        smoother        ILU;
+        residualOutput  RMS;
+        convergenceCriteria component;
+        component       3;
+        relTol          0.1;
+        tolerance       1e-30;
+        minIter         1;
+        maxIter         5;
+    }
+}
+
+relaxationFactors
+{
+    fields
+    {
+        p               1;
+        phi             1;
+    }
+    equations
+    {
+        k               0.95;
+        epsilon         0.95;
+        U               1;
+        nut             1;
+    }
+}
+
+blockSolver
+{
+    pRefCell        0;
+    pRefValue       0;
+}
+
+cache
+{
+    grad(U)         ;
+}
+
+
+// ************************************************************************* //

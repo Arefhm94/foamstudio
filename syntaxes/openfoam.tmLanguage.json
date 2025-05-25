@@ -1,0 +1,29 @@
+{
+  "scopeName": "source.openfoam",
+  "patterns": [
+    {
+      "name": "comment.line.double-slash.openfoam",
+      "match": "//.*"
+    },
+    {
+      "name": "keyword.control.openfoam",
+      "match": "\\b(if|else|for|while|return)\\b"
+    },
+    {
+      "name": "variable.assignment.openfoam",
+      "match": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\s*=\\s*"
+    },
+    {
+      "name": "constant.numeric.openfoam",
+      "match": "\\b[0-9]+(\\.[0-9]+)?\\b"
+    },
+    {
+      "name": "punctuation.brackets.openfoam",
+      "match": "[{};]"
+    }
+  ],
+  "repository": {},
+  "fileTypes": ["dict", "controlDict", "fvSchemes", "fvSolution"],
+  "name": "OpenFOAM",
+  "uuid": "b1e7a1c0-5c3b-11e0-80e3-0800200c9a66"
+}
