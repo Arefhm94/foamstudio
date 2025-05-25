@@ -54,7 +54,7 @@
       },
       {
         "id": "openfoam.keyValue",
-        "description": "Color for OpenFOAM key-value nodes", 
+        "description": "Color for OpenFOAM key-value nodes",
         "defaults": {
           "dark": "#4EC9B0",
           "light": "#008000",
@@ -88,84 +88,20 @@
         }
       },
       {
-        "id": "openfoam.valueColor", 
+        "id": "openfoam.valueColor",
         "description": "Color for OpenFOAM values",
         "defaults": {
           "dark": "#81C784",
           "light": "#388E3C"
         }
-      },
-      {
-        "id": "openfoamOutline.keyForeground",
-        "description": "Foreground color for OpenFOAM keys in outline",
-        "defaults": {
-          "dark": "#569CD6",
-          "light": "#0000FF"
-        }
-      },
-      {
-        "id": "openfoamOutline.valueForeground", 
-        "description": "Foreground color for OpenFOAM values in outline",
-        "defaults": {
-          "dark": "#4EC9B0",
-          "light": "#008000"
-        }
       }
     ],
-    "views": {
-      "explorer": [
-        {
-          "id": "openfoamOutline",
-          "name": "OpenFOAM Outline",
-          "icon": "$(symbol-structure)",
-          "when": "resourceExtname == .dict || resourceFilename == controlDict || resourceFilename == fvSchemes || resourceFilename == fvSolution || resourceFilename == caseSetupDict || resourceFilename == decomposeParDict || resourceFilename == fvOptions || resourceFilename == helyxHexMeshDict || resourceFilename == probesLocation || resourceFilename == surfaceFeatureExtractDict || resourceFilename == surfaceIntersectionDict || resourceFilename == topoSetDict"
-        }
-      ]
-    },
     "commands": [
       {
         "command": "foamstudio.helloWorld",
         "title": "Hello World"
-      },
-      {
-        "command": "foamstudio.revealLine",
-        "title": "Reveal Line"
-      },
-      {
-        "command": "foamstudio.refreshOutline",
-        "title": "Refresh",
-        "icon": "$(refresh)"
-      },
-      {
-        "command": "foamstudio.collapseAll",
-        "title": "Collapse All",
-        "icon": "$(collapse-all)"
-      },
-      {
-        "command": "foamstudio.testOutline",
-        "title": "Test OpenFOAM Outline",
-        "icon": "$(debug-start)"
       }
-    ],
-    "menus": {
-      "view/title": [
-        {
-          "command": "foamstudio.refreshOutline",
-          "when": "view == openfoamOutline",
-          "group": "navigation"
-        },
-        {
-          "command": "foamstudio.collapseAll",
-          "when": "view == openfoamOutline",
-          "group": "navigation"
-        },
-        {
-          "command": "foamstudio.testOutline",
-          "when": "view == openfoamOutline",
-          "group": "navigation"
-        }
-      ]
-    }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -176,14 +112,14 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.100.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
+    "@types/vscode": "^1.100.0",
     "@typescript-eslint/eslint-plugin": "^8.31.1",
     "@typescript-eslint/parser": "^8.31.1",
-    "eslint": "^9.25.1",
-    "typescript": "^5.8.3",
     "@vscode/test-cli": "^0.0.10",
-    "@vscode/test-electron": "^2.5.2"
+    "@vscode/test-electron": "^2.5.2",
+    "eslint": "^9.25.1",
+    "typescript": "^5.8.3"
   }
 }
