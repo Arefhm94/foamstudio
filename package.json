@@ -1,15 +1,21 @@
 {
   "name": "foamstudio",
   "displayName": "FoamStudio",
-  "description": "This an extension for OpenFOAM in the vscode",
-  "version": "0.0.1",
+  "description": "Advanced OpenFOAM support for VS Code",
+  "version": "0.1.0",
   "engines": {
     "vscode": "^1.100.0"
   },
   "categories": [
-    "Other"
+    "Programming Languages",
+    "Formatters",
+    "Linters"
   ],
-  "activationEvents": [],
+  "keywords": [
+    "openfoam",
+    "cfd",
+    "simulation"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "languages": [
@@ -30,7 +36,8 @@
           "topoSetDict"
         ],
         "aliases": [
-          "OpenFOAM"
+          "OpenFOAM",
+          "openfoam"
         ],
         "configuration": "./language-configuration.json"
       }
@@ -42,64 +49,56 @@
         "path": "./syntaxes/openfoam.tmLanguage.json"
       }
     ],
-    "colors": [
-      {
-        "id": "openfoam.block",
-        "description": "Color for OpenFOAM block nodes",
-        "defaults": {
-          "dark": "#569CD6",
-          "light": "#0000FF",
-          "highContrast": "#569CD6"
-        }
-      },
-      {
-        "id": "openfoam.keyValue",
-        "description": "Color for OpenFOAM key-value nodes",
-        "defaults": {
-          "dark": "#4EC9B0",
-          "light": "#008000",
-          "highContrast": "#4EC9B0"
-        }
-      },
-      {
-        "id": "openfoam.key",
-        "description": "Color for OpenFOAM key nodes",
-        "defaults": {
-          "dark": "#DCDCAA",
-          "light": "#795E26",
-          "highContrast": "#DCDCAA"
-        }
-      },
-      {
-        "id": "openfoam.value",
-        "description": "Color for OpenFOAM value nodes",
-        "defaults": {
-          "dark": "#CE9178",
-          "light": "#A31515",
-          "highContrast": "#CE9178"
-        }
-      },
-      {
-        "id": "openfoam.keyColor",
-        "description": "Color for OpenFOAM keys",
-        "defaults": {
-          "dark": "#4FC3F7",
-          "light": "#0277BD"
-        }
-      },
-      {
-        "id": "openfoam.valueColor",
-        "description": "Color for OpenFOAM values",
-        "defaults": {
-          "dark": "#81C784",
-          "light": "#388E3C"
-        }
-      }
-    ],
     "commands": [
       {
         "command": "foamstudio.helloWorld",
-        "title": "Hello World"
+        "title": "Hello World",
+        "category": "FoamStudio"
+      },
+      {
+        "command": "foamstudio.formatDocument",
+        "title": "Format Document",
+        "category": "FoamStudio"
+      },
+      {
+        "command": "foamstudio.validateSyntax",
+        "title": "Validate Syntax",
+        "category": "FoamStudio"
+      },
+      {
+        "command": "foamstudio.revealLine",
+        "title": "Reveal Line",
+        "category": "FoamStudio"
+      }
+    ],
+    "views": {
+      "explorer": [
+        {
+          "id": "openfoamOutline",
+          "name": "OpenFOAM Outline",
+          "when": "resourceExtname == .dict || resourceFilename == controlDict || resourceFilename == fvSchemes || resourceFilename == fvSolution"
+        }
+      ]
+    },
+    "menus": {
+      "editor/context": [
+        {
+          "when": "resourceLangId == openfoam",
+          "command": "foamstudio.formatDocument",
+          "group": "1_modification"
+        },
+        {
+          "when": "resourceLangId == openfoam",
+          "command": "foamstudio.validateSyntax",
+          "group": "1_modification"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "foamstudio.formatDocument",
+        "key": "alt+shift+f",
+        "when": "resourceLangId == openfoam"
       }
     ]
   },

@@ -1,84 +1,77 @@
 {
-  "scopeName": "source.openfoam",
-  "patterns": [
-    {
-      "name": "comment.block.openfoam",
-      "begin": "/\\*",
-      "end": "\\*/",
-      "patterns": [
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "OpenFOAM",
+    "patterns": [
         {
-          "name": "constant.character.escape.openfoam",
-          "match": "\\\\."
-        }
-      ]
-    },
-    {
-      "name": "comment.line.double-slash.openfoam",
-      "match": "//.*"
-    },
-    {
-      "name": "keyword.other.foamfile.openfoam",
-      "match": "\\b(FoamFile)\\b"
-    },
-    {
-      "name": "keyword.other.schemes.openfoam",
-      "match": "\\b(ddtSchemes|gradSchemes|divSchemes|laplacianSchemes|interpolationSchemes|snGradSchemes|fluxRequired)\\b"
-    },
-    {
-      "name": "keyword.other.solution.openfoam",
-      "match": "\\b(solvers|PISO|SIMPLE|PIMPLE|relaxationFactors|nNonOrthogonalCorrectors|nCorrectors|nOuterCorrectors)\\b"
-    },
-    {
-      "name": "keyword.other.controldict.openfoam",
-      "match": "\\b(application|startFrom|startTime|stopAt|endTime|deltaT|writeControl|writeInterval|purgeWrite|writeFormat|writePrecision|writeCompression|timeFormat|timePrecision|runTimeModifiable|adjustTimeStep|maxCo|maxDeltaT)\\b"
-    },
-    {
-      "name": "string.quoted.double.openfoam",
-      "begin": "\"",
-      "end": "\"",
-      "patterns": [
+            "include": "#keywords"
+        },
         {
-          "name": "constant.character.escape.openfoam",
-          "match": "\\\\."
+            "include": "#strings"
+        },
+        {
+            "include": "#numbers"
+        },
+        {
+            "include": "#comments"
+        },
+        {
+            "include": "#operators"
         }
-      ]
-    },
-    {
-      "name": "variable.assignment.openfoam",
-      "match": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\s*(?=\\s)",
-      "captures": {
-        "1": {
-          "name": "variable.other.openfoam"
+    ],
+    "repository": {
+        "keywords": {
+            "patterns": [
+                {
+                    "name": "keyword.control.openfoam",
+                    "match": "\\b(application|startFrom|startTime|endTime|deltaT|writeControl|writeInterval|writeFormat|writePrecision|writeCompression|runTimeModifiable|timeFormat|timePrecision|purgeWrite|stopAt|maxCo|maxAlphaCo|maxDeltaT|adjustTimeStep)\\b"
+                },
+                {
+                    "name": "keyword.other.openfoam",
+                    "match": "\\b(FoamFile|version|format|class|object|ddtSchemes|gradSchemes|divSchemes|laplacianSchemes|interpolationSchemes|snGradSchemes|fluxRequired|solvers|PISO|SIMPLE|PIMPLE|nOuterCorrectors|nCorrectors|nNonOrthogonalCorrectors|residualControl)\\b"
+                }
+            ]
+        },
+        "strings": {
+            "name": "string.quoted.double.openfoam",
+            "begin": "\"",
+            "end": "\"",
+            "patterns": [
+                {
+                    "name": "constant.character.escape.openfoam",
+                    "match": "\\\\."
+                }
+            ]
+        },
+        "numbers": {
+            "patterns": [
+                {
+                    "name": "constant.numeric.openfoam",
+                    "match": "\\b[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?\\b"
+                }
+            ]
+        },
+        "comments": {
+            "patterns": [
+                {
+                    "name": "comment.line.double-slash.openfoam",
+                    "begin": "//",
+                    "end": "$"
+                },
+                {
+                    "name": "comment.block.openfoam",
+                    "begin": "/\\*",
+                    "end": "\\*/"
+                }
+            ]
+        },
+        "operators": {
+            "patterns": [
+                {
+                    "name": "keyword.operator.openfoam",
+                    "match": "[{}();]"
+                }
+            ]
         }
-      }
     },
-    {
-      "name": "constant.numeric.openfoam",
-      "match": "\\b\\d+(\\.\\d+)?([eE][+-]?\\d+)?\\b"
-    },
-    {
-      "name": "constant.language.boolean.openfoam",
-      "match": "\\b(true|false|yes|no|on|off)\\b"
-    },
-    {
-      "name": "punctuation.definition.dictionary.begin.openfoam",
-      "match": "\\{"
-    },
-    {
-      "name": "punctuation.definition.dictionary.end.openfoam",
-      "match": "\\}"
-    },
-    {
-      "name": "punctuation.terminator.statement.openfoam",
-      "match": ";"
-    },
-    {
-      "name": "support.function.openfoam",
-      "match": "\\b(Gauss|linear|upwind|limitedLinear|vanLeer|MUSCL|limitedCubic|cellLimited|faceLimited|bounded|clippedLinear|linearUpwind|linearUpwindV|LUST|localBlended|midPoint|skewCorrected|orthogonal|corrected|uncorrected|fourth|cubic|quadratic|CrankNicolson|Euler|backward|steadyState|localEuler|SLTS)\\b"
-    }
-  ],
-  "repository": {},
-  "fileTypes": ["dict", "controlDict", "fvSchemes", "fvSolution", "caseSetupDict", "decomposeParDict", "fvOptions", "helyxHexMeshDict", "probesLocation", "surfaceFeatureExtractDict", "surfaceIntersectionDict", "topoSetDict"],
-  "name": "OpenFOAM",
-  "uuid": "b1e7a1c0-5c3b-11e0-80e3-0800200c9a66"
+    "scopeName": "source.openfoam"
 }
