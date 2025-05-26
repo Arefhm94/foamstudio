@@ -138,8 +138,7 @@ function setupDocumentListeners(context: vscode.ExtensionContext) {
     context.subscriptions.push(
         vscode.workspace.onDidChangeTextDocument(event => {
             if (isSupportedOpenFOAMFile(event.document)) {
-                // Debounce validation
-                setTimeout(() => validationProvider.validateDocument(event.document), 500);
+                validationProvider.validateDocument(event.document);
             }
         })
     );
