@@ -6,6 +6,11 @@ import { OpenFOAMTreeProvider } from './openfoamTreeProvider';
 import { OpenFOAMCompletionProvider } from './completionProvider';
 import { OpenFOAMHoverProvider } from './hoverProvider';
 import { OpenFOAMValidationProvider } from './validationProvider';
+import { OpenFOAMDefinitionProvider, OpenFOAMReferenceProvider } from './definitionProvider';
+import { OpenFOAMFormattingProvider, OpenFOAMRangeFormattingProvider } from './formattingProvider';
+import { OpenFOAMSignatureHelpProvider } from './signatureHelpProvider';
+import { OpenFOAMCodeActionsProvider } from './codeActionsProvider';
+import { OpenFOAMInlayHintsProvider } from './inlayHintsProvider';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -56,13 +61,57 @@ function registerProviders(context: vscode.ExtensionContext, selector: vscode.Do
         vscode.languages.registerCompletionItemProvider(
             selector, 
             new OpenFOAMCompletionProvider(), 
-            ' ', '.', '('
+            ' ', '.', '(', '\t'
         )
     );
 
     // Hover provider for documentation
     context.subscriptions.push(
         vscode.languages.registerHoverProvider(selector, new OpenFOAMHoverProvider())
+    );
+
+    // Signature Help provider for parameter hints
+    context.subscriptions.push(
+        vscode.languages.registerSignatureHelpProvider(
+            selector,
+            new OpenFOAMSignatureHelpProvider(),
+            ' ', '(', ','
+        )
+    );
+
+    // Code Actions provider for quick fixes and refactorings
+    context.subscriptions.push(
+        vscode.languages.registerCodeActionsProvider(
+            selector,
+            new OpenFOAMCodeActionsProvider(),
+            {
+                providedCodeActionKinds: OpenFOAMCodeActionsProvider.providedCodeActionKinds
+            }
+        )
+    );
+
+    // Inlay Hints provider for inline type information
+    context.subscriptions.push(
+        vscode.languages.registerInlayHintsProvider(selector, new OpenFOAMInlayHintsProvider())
+    );
+
+    // Definition provider for Go to Definition
+    context.subscriptions.push(
+        vscode.languages.registerDefinitionProvider(selector, new OpenFOAMDefinitionProvider())
+    );
+
+    // Reference provider for Find All References
+    context.subscriptions.push(
+        vscode.languages.registerReferenceProvider(selector, new OpenFOAMReferenceProvider())
+    );
+
+    // Formatting providers
+    context.subscriptions.push(
+        vscode.languages.registerDocumentFormattingEditProvider(selector, new OpenFOAMFormattingProvider())
+    );
+
+    context.subscriptions.push(
+        vscode.languages.registerDocumentRangeFormattingEditProvider(selector, new OpenFOAMRangeFormattingProvider())
     );
 
     // Validation provider for diagnostics

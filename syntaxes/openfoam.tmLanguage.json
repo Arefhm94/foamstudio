@@ -3,7 +3,31 @@
     "name": "OpenFOAM",
     "patterns": [
         {
+            "include": "#foam-file-header"
+        },
+        {
+            "include": "#comments"
+        },
+        {
+            "include": "#preprocessor"
+        },
+        {
             "include": "#keywords"
+        },
+        {
+            "include": "#functions"
+        },
+        {
+            "include": "#solvers"
+        },
+        {
+            "include": "#schemes"
+        },
+        {
+            "include": "#constants"
+        },
+        {
+            "include": "#vectors-tensors"
         },
         {
             "include": "#strings"
@@ -12,41 +36,29 @@
             "include": "#numbers"
         },
         {
-            "include": "#comments"
+            "include": "#operators"
         },
         {
-            "include": "#operators"
+            "include": "#identifiers"
         }
     ],
     "repository": {
-        "keywords": {
+        "foam-file-header": {
             "patterns": [
                 {
-                    "name": "keyword.control.openfoam",
-                    "match": "\\b(application|startFrom|startTime|endTime|deltaT|writeControl|writeInterval|writeFormat|writePrecision|writeCompression|runTimeModifiable|timeFormat|timePrecision|purgeWrite|stopAt|maxCo|maxAlphaCo|maxDeltaT|adjustTimeStep)\\b"
+                    "name": "comment.block.header.openfoam",
+                    "begin": "/\\*-+\\*- C\\+\\+ -\\*-+\\*\\\\",
+                    "end": "\\\\\\*-+\\*/",
+                    "patterns": [
+                        {
+                            "name": "comment.block.header.content.openfoam",
+                            "match": ".*"
+                        }
+                    ]
                 },
                 {
-                    "name": "keyword.other.openfoam",
-                    "match": "\\b(FoamFile|version|format|class|object|ddtSchemes|gradSchemes|divSchemes|laplacianSchemes|interpolationSchemes|snGradSchemes|fluxRequired|solvers|PISO|SIMPLE|PIMPLE|nOuterCorrectors|nCorrectors|nNonOrthogonalCorrectors|residualControl)\\b"
-                }
-            ]
-        },
-        "strings": {
-            "name": "string.quoted.double.openfoam",
-            "begin": "\"",
-            "end": "\"",
-            "patterns": [
-                {
-                    "name": "constant.character.escape.openfoam",
-                    "match": "\\\\."
-                }
-            ]
-        },
-        "numbers": {
-            "patterns": [
-                {
-                    "name": "constant.numeric.openfoam",
-                    "match": "\\b[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?\\b"
+                    "name": "entity.name.section.foamfile.openfoam",
+                    "match": "^\\s*FoamFile\\s*$"
                 }
             ]
         },
@@ -55,20 +67,232 @@
                 {
                     "name": "comment.line.double-slash.openfoam",
                     "begin": "//",
-                    "end": "$"
+                    "end": "$",
+                    "patterns": [
+                        {
+                            "name": "punctuation.definition.comment.openfoam",
+                            "match": "\\*+"
+                        }
+                    ]
                 },
                 {
                     "name": "comment.block.openfoam",
                     "begin": "/\\*",
-                    "end": "\\*/"
+                    "end": "\\*/",
+                    "patterns": [
+                        {
+                            "name": "punctuation.definition.comment.openfoam",
+                            "match": "\\*"
+                        }
+                    ]
+                }
+            ]
+        },
+        "preprocessor": {
+            "patterns": [
+                {
+                    "name": "meta.preprocessor.include.openfoam",
+                    "match": "^\\s*(#include)\\s+(\"[^\"]+\"|<[^>]+>)",
+                    "captures": {
+                        "1": {
+                            "name": "keyword.control.directive.include.openfoam"
+                        },
+                        "2": {
+                            "name": "string.quoted.other.openfoam"
+                        }
+                    }
+                },
+                {
+                    "name": "meta.preprocessor.openfoam",
+                    "match": "^\\s*(#(?:ifdef|ifndef|if|else|elif|endif|define|undef))\\b",
+                    "captures": {
+                        "1": {
+                            "name": "keyword.control.directive.openfoam"
+                        }
+                    }
+                },
+                {
+                    "name": "meta.preprocessor.macro.openfoam",
+                    "match": "^\\s*(\\$\\w+)\\b",
+                    "captures": {
+                        "1": {
+                            "name": "variable.other.macro.openfoam"
+                        }
+                    }
+                }
+            ]
+        },
+        "keywords": {
+            "patterns": [
+                {
+                    "name": "keyword.control.time.openfoam",
+                    "match": "\\b(application|startFrom|startTime|endTime|stopAt|deltaT|writeControl|writeInterval|writeFormat|writePrecision|writeCompression|runTimeModifiable|timeFormat|timePrecision|purgeWrite|graphFormat|maxCo|maxAlphaCo|maxDeltaT|adjustTimeStep)\\b"
+                },
+                {
+                    "name": "keyword.control.schemes.openfoam",
+                    "match": "\\b(ddtSchemes|gradSchemes|divSchemes|laplacianSchemes|interpolationSchemes|snGradSchemes|fluxRequired|wallDist)\\b"
+                },
+                {
+                    "name": "keyword.control.solution.openfoam",
+                    "match": "\\b(solvers|relaxationFactors|PISO|SIMPLE|PIMPLE|nOuterCorrectors|nCorrectors|nNonOrthogonalCorrectors|residualControl|pRefCell|pRefValue|momentumPredictor|transonic|consistent|cache|blockSolver)\\b"
+                },
+                {
+                    "name": "keyword.control.header.openfoam",
+                    "match": "\\b(version|format|class|location|object|arch|note)\\b"
+                },
+                {
+                    "name": "storage.type.openfoam",
+                    "match": "\\b(dictionary|volScalarField|volVectorField|surfaceScalarField|pointScalarField|uniform|nonuniform|calculated|fixedValue|zeroGradient|inletOutlet|slip|symmetry|empty|wedge|cyclic|processor)\\b"
+                },
+                {
+                    "name": "constant.language.openfoam",
+                    "match": "\\b(true|false|yes|no|on|off|latestTime|firstTime|startTime|endTime|constant|timeStep|runTime|adjustableRunTime|clockTime|cpuTime|binary|ascii)\\b"
+                }
+            ]
+        },
+        "functions": {
+            "patterns": [
+                {
+                    "name": "support.function.builtin.openfoam",
+                    "match": "\\b(type|libs|enabled|executeControl|writeControl|writeInterval|functionObjectLibs|fields|probeLocations|interpolationScheme|setFormat|sets|axis|nPoints|start|end|regions|name|logToFile)\\b"
+                },
+                {
+                    "name": "entity.name.function.openfoam",
+                    "match": "\\b(probes|sets|surfaces|fieldAverage|fieldMinMax|forces|forceCoeffs|yPlus|wallShearStress|turbulenceFields|volumeReport|residuals|singleGraph|streamLine|Q|Lambda2|vorticity)\\b"
+                }
+            ]
+        },
+        "solvers": {
+            "patterns": [
+                {
+                    "name": "support.class.solver.openfoam",
+                    "match": "\\b(PCG|PBiCG|PBiCGStab|smoothSolver|GAMG|diagonal|AMG|FDIC|DIC|DILU|DILUGaussSeidel|symGaussSeidel|GaussSeidel|ILU|nonBlockingGaussSeidel)\\b"
+                },
+                {
+                    "name": "variable.parameter.solver.openfoam",
+                    "match": "\\b(solver|preconditioner|smoother|tolerance|relTol|minIter|maxIter|nPreSweeps|nPostSweeps|nFinestSweeps|cacheAgglomeration|nCellsInCoarsestLevel|agglomerator|mergeLevels|cycle|coarseningType|component|residualOutput|convergenceCriteria)\\b"
+                }
+            ]
+        },
+        "schemes": {
+            "patterns": [
+                {
+                    "name": "support.class.scheme.openfoam",
+                    "match": "\\b(Euler|backward|CrankNicolson|steadyState|localEuler|bounded|unbounded|Gauss|linear|linearUpwind|linearUpwindV|upwind|LUST|limitedLinear|vanLeer|MUSCL|QUICK|UMIST|limitWith|cellLimited|cellMDLimited|faceLimited|faceMDLimited|corrected|uncorrected|limited|orthogonal|skewCorrected|fourth|cubic|midPoint|downwind|clipped|weighted|pointLinear|harmonic|taylorGauss|leastSquares|meshWave|meshWaveFrozen|patchDistMethod|Chien|vanDriest)\\b"
+                },
+                {
+                    "name": "support.function.scheme.openfoam",
+                    "match": "\\b(div|grad|laplacian|interpolate|snGrad|ddt|d2dt2|fvc|fvm)\\b"
+                }
+            ]
+        },
+        "constants": {
+            "patterns": [
+                {
+                    "name": "support.constant.openfoam",
+                    "match": "\\b(pi|twoPi|e|degToRad|radToDeg|GREAT|VGREAT|SMALL|VSMALL|ROOTVSMALL|ROOTVGREAT)\\b"
+                },
+                {
+                    "name": "constant.language.dimension.openfoam",
+                    "match": "\\[\\s*[-+]?\\d+\\s+[-+]?\\d+\\s+[-+]?\\d+\\s+[-+]?\\d+\\s+[-+]?\\d+\\s+[-+]?\\d+\\s+[-+]?\\d+\\s*\\]"
+                }
+            ]
+        },
+        "vectors-tensors": {
+            "patterns": [
+                {
+                    "name": "meta.structure.vector.openfoam",
+                    "begin": "\\(",
+                    "end": "\\)",
+                    "beginCaptures": {
+                        "0": {
+                            "name": "punctuation.definition.vector.begin.openfoam"
+                        }
+                    },
+                    "endCaptures": {
+                        "0": {
+                            "name": "punctuation.definition.vector.end.openfoam"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#numbers"
+                        },
+                        {
+                            "include": "#comments"
+                        },
+                        {
+                            "name": "punctuation.separator.vector.openfoam",
+                            "match": "\\s+"
+                        }
+                    ]
+                }
+            ]
+        },
+        "strings": {
+            "patterns": [
+                {
+                    "name": "string.quoted.double.openfoam",
+                    "begin": "\"",
+                    "end": "\"",
+                    "patterns": [
+                        {
+                            "name": "constant.character.escape.openfoam",
+                            "match": "\\\\."
+                        }
+                    ]
+                }
+            ]
+        },
+        "numbers": {
+            "patterns": [
+                {
+                    "name": "constant.numeric.exponential.openfoam",
+                    "match": "[-+]?\\d*\\.?\\d+[eE][-+]?\\d+"
+                },
+                {
+                    "name": "constant.numeric.float.openfoam",
+                    "match": "[-+]?\\d*\\.\\d+\\b"
+                },
+                {
+                    "name": "constant.numeric.integer.openfoam",
+                    "match": "[-+]?\\d+\\b"
                 }
             ]
         },
         "operators": {
             "patterns": [
                 {
-                    "name": "keyword.operator.openfoam",
-                    "match": "[{}();]"
+                    "name": "punctuation.section.block.begin.openfoam",
+                    "match": "\\{"
+                },
+                {
+                    "name": "punctuation.section.block.end.openfoam",
+                    "match": "\\}"
+                },
+                {
+                    "name": "punctuation.terminator.statement.openfoam",
+                    "match": ";"
+                },
+                {
+                    "name": "punctuation.separator.key-value.openfoam",
+                    "match": ":"
+                },
+                {
+                    "name": "keyword.operator.arithmetic.openfoam",
+                    "match": "[+\\-*/]"
+                },
+                {
+                    "name": "punctuation.section.brackets.openfoam",
+                    "match": "[\\[\\]]"
+                }
+            ]
+        },
+        "identifiers": {
+            "patterns": [
+                {
+                    "name": "variable.other.field.openfoam",
+                    "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*\\b"
                 }
             ]
         }
