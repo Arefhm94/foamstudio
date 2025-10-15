@@ -2,7 +2,7 @@
   "name": "foamstudio",
   "displayName": "FoamStudio",
   "description": "Advanced OpenFOAM support for VS Code",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "publisher": "Arefhm94",
   "engines": {
     "vscode": "^1.100.0"
